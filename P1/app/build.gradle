@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    //Plugin necesario para el uso de Data Binding
+    id 'kotlin-kapt'
 }
 
 android {
@@ -28,6 +30,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    //Indicamos que vamos a usar Data Binding
+    buildFeatures{
+        dataBinding true
     }
 }
 
