@@ -11,8 +11,6 @@ class Factura constructor(decEstado:String, importeOrdenacion :Double, fecha : S
         this.fecha=fecha
 
     }
-     override fun toString(): String {
-         return super.toString()
-     }
+
 
  }

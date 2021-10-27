@@ -1,10 +1,11 @@
 package com.example.practica_1
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.widget.Toast
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practica_1.Model.Factura
 import com.example.practica_1.Model.RespuestaFactura
@@ -14,14 +15,12 @@ import com.example.practica_1.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -38,12 +37,16 @@ class MainActivity : AppCompatActivity() {
         getFacturas()
         initRecyclerView()
 
+
     }
 
+    //Iniciamos el recyclerview con su correspondiente adaptador y lista de datos a mostrar,
+    //también indicamos la disposición que queremos en nuestra vista, en este caso vertical
     private fun initRecyclerView() {
-        adapter= FacturaAdapter(_facturas)
+        adapter= FacturaAdapter(_facturas, this)
         binding.recyclerFacturas.layoutManager = LinearLayoutManager(this)
         binding.recyclerFacturas.adapter=adapter
+
     }
 
 
@@ -68,7 +71,6 @@ class MainActivity : AppCompatActivity() {
                    _facturas.clear()
                     _facturas.addAll(facturas)
                    adapter.notifyDataSetChanged()
-                   Log.i("bubi", callBody.toString())
 
                } else {
                    Log.i("MyTag", "ERROR COROUTINESCOPE ")
@@ -78,5 +80,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    //Función que se realiza al realizar click en el icono de cada factura
+    override fun onIconoClick(facturaMostrar: Factura) {
+
+        //Instanciamos el constructor del dialog y seteampos el título y el mensaje de la factura
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Título")
+        builder.setMessage("Está función aún no está disponible")
+        builder.setNeutralButton("Cerrar"){
+            dialog, which ->{}
+        }
+
+        //Mostramos el dialog
+        builder.show()
+    }
 
 }
