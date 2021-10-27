@@ -11,20 +11,29 @@ class FacturaViewHolder(view: View, private val facturaClickListener: FacturaAda
     private val binding = ItemFacturaBinding.bind(view)
 
 
+    //Asignamos a cada correspondiende campo de nuestra vista (view) su valor a partir del objeto factura que llegue
     fun bind(factura: Factura) {
-        binding.fecha.text=factura.fecha
+        //Importe
         binding.importeFactura.text=factura.importeOrdenacion.toString() + " €"
+
+        //Estado
         if(factura.descEstado!="Pagada") {
             binding.estadoFactura.text=factura.descEstado}
         else{
             binding.estadoFactura.text=""
         }
+
+        //Fecha
         val datos_fecha=obtenerFecha(factura.fecha)
         binding.fecha.text=datos_fecha[0]+" "+datos_fecha[1]+" "+datos_fecha[2]
-        binding.botonPopUp.setOnClickListener{facturaClickListener.onIconoClick(factura)}
+
+
+        binding.botonPopUp.setOnClickListener{facturaClickListener.onIconoClick()}
 
     }
 
+    //Función auxiliar para separar la fecha recibida en formato String DD/MM/YYYY para formatearla
+    //en el formato que se pide
     fun obtenerFecha(fecha : String): MutableList<String>{
         val separador : String ="/"
         var datos_fecha_separados : MutableList<String> = fecha.split(separador).toMutableList()

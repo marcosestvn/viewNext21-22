@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
     private var _facturas= mutableListOf<Factura>()
 
+    private val BASE_URL = "http://viewnextandroid.mocklab.io/"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(
@@ -36,8 +38,6 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         setContentView(binding.root)
         getFacturas()
         initRecyclerView()
-
-
     }
 
     //Iniciamos el recyclerview con su correspondiente adaptador y lista de datos a mostrar,
@@ -49,20 +49,23 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
     }
 
-
-    private val BASE_URL = "http://viewnextandroid.mocklab.io/"
-
+    //Instanciamos la clase Retrofit pasandole como parámetro del método add..Factory el GSONConverter
+    //este objeto nos permitira realizar las llamadas a la API y nos devolverá el objeto parseado
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
 
+    //Método GET para obtener las fácturas de nuestra API el cual se realiza en un hilo secundario, IO,
+    //mediante una corutina
     private fun getFacturas() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val call: Response<RespuestaFactura> =
                 getRetrofit().create(FacturaApi::class.java).getFacturas()
            runOnUiThread {
+
+               //Si la llamada es exitosa almacenamos las facturas recibidas de la API en una variable local
                if (call.isSuccessful) {
                    val callBody = call.body()
 
@@ -72,7 +75,10 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
                     _facturas.addAll(facturas)
                    adapter.notifyDataSetChanged()
 
-               } else {
+
+               }
+               //Si la llamada no es exitosa mostramos un error por consola
+               else {
                    Log.i("MyTag", "ERROR COROUTINESCOPE ")
                }
            }
@@ -81,10 +87,10 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
     }
 
 
-    //Función que se realiza al realizar click en el icono de cada factura
-    override fun onIconoClick(facturaMostrar: Factura) {
+    //Lógica que se realiza al realizar click en el icono de cada factura
+    override fun onIconoClick() {
 
-        //Instanciamos el constructor del dialog y seteampos el título y el mensaje de la factura
+        //Instanciamos el constructor del dialog y seteamos el título y el mensaje
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Título")
         builder.setMessage("Está función aún no está disponible")

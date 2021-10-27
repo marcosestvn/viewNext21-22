@@ -19,7 +19,7 @@ class FacturaAdapter(
 
     //Interfaz de métodos a implementar en el listener
     interface onFacturaListener {
-        fun onIconoClick(facturaMostrar: Factura)
+        fun onIconoClick()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacturaViewHolder {
@@ -29,7 +29,6 @@ class FacturaAdapter(
 
     override fun onBindViewHolder(holder: FacturaViewHolder, position: Int) {
         val item: Factura = facturas[position]
-
         holder.bind(item)
     }
 
@@ -37,20 +36,4 @@ class FacturaAdapter(
         return facturas.size
     }
 
-
-}
-
-interface onItemClickListener {
-    fun onItemClick(position: Int)
-}
-
-class FacturaDiffCallBack : DiffUtil.ItemCallback<Factura>() {
-    override fun areItemsTheSame(oldItem: Factura, newItem: Factura): Boolean {
-        return oldItem.fecha == newItem.fecha
-    }
-
-    @SuppressLint("DiffUtilEquals")
-    override fun areContentsTheSame(oldItem: Factura, newItem: Factura): Boolean {
-        return oldItem == newItem
-    }
 }
