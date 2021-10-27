@@ -11,29 +11,25 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_padding"
-        android:paddingLeft="@dimen/normal_padding"
-        android:paddingBottom="32dp">
+        android:paddingLeft="@dimen/normal_padding">
 
         <TextView
             android:id="@+id/fecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:text="Fecha Factura"
             android:textColor="@color/black"
             android:textSize="@dimen/fecha_factura_text_size"
             app:layout_constraintBottom_toTopOf="@+id/estadoFactura"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread" />
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/estadoFactura"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="353dp"
             android:layout_marginBottom="8dp"
             android:text="Estado Factura"
@@ -47,30 +43,44 @@
 
         <TextView
             android:id="@+id/importeFactura"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="128dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:drawableBottom="@drawable/factura_border_bottom"
+            android:gravity="center"
             android:text="TextView"
             android:textAlignment="viewEnd"
             android:textColor="@color/black"
             android:textSize="@dimen/importe_text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/estadoFactura"
+            app:layout_constraintEnd_toStartOf="@+id/botonPopUp"
             app:layout_constraintStart_toEndOf="@+id/fecha"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.505" />
+            app:layout_constraintTop_toTopOf="@+id/fecha" />
 
         <ImageView
             android:id="@+id/botonPopUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:paddingRight="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/importeFactura"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/importeFactura"
             app:layout_constraintTop_toTopOf="@+id/importeFactura"
             app:layout_constraintVertical_bias="0.485"
             app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/factura_border_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/estadoFactura"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="16dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
