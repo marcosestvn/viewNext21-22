@@ -8,14 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practica_1.Model.Factura
 import com.example.practica_1.R
 
 class FacturaAdapter(
-    val facturas: List<Factura>,
     private val facturaClickListener: onFacturaListener
-) : RecyclerView.Adapter<FacturaViewHolder>() {
+) : ListAdapter<Factura,FacturaViewHolder>(MyDiffUtil()) {
 
     //Interfaz de métodos a implementar en el listener
     interface onFacturaListener {
@@ -28,12 +28,6 @@ class FacturaAdapter(
     }
 
     override fun onBindViewHolder(holder: FacturaViewHolder, position: Int) {
-        val item: Factura = facturas[position]
-        holder.bind(item)
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount(): Int {
-        return facturas.size
-    }
-
 }

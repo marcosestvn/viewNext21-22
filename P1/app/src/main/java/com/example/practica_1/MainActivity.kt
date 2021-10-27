@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.widget.Toast
 
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,14 +39,21 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         setContentView(binding.root)
         getFacturas()
         initRecyclerView()
+        setSupportActionBar(binding.toolbar)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
     }
 
     //Iniciamos el recyclerview con su correspondiente adaptador y lista de datos a mostrar,
     //también indicamos la disposición que queremos en nuestra vista, en este caso vertical
     private fun initRecyclerView() {
-        adapter= FacturaAdapter(_facturas, this)
+        adapter= FacturaAdapter(this)
         binding.recyclerFacturas.layoutManager = LinearLayoutManager(this)
         binding.recyclerFacturas.adapter=adapter
+        adapter.submitList(_facturas)
 
     }
 
@@ -74,6 +82,7 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
                    _facturas.clear()
                     _facturas.addAll(facturas)
                    adapter.notifyDataSetChanged()
+
 
 
                }
