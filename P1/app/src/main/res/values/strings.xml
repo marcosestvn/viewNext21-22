@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Practica-1</string>
     <string name="tituloToolbar">Consumo</string>
+    <string name = "cabeceraListadoFactura">Facturas</string>
+
+    <string name="cabeceraFiltros">Filtrar facturas</string>
+    <string name="filtros_titulo_fecha">Con fecha de emisión</string>
+    <string name="desde">Desde:</string>
+    <string name="hasta">Hasta:</string>
+    <string name="filtros_titulo_importe">Por un importe</string>
+    <string name="botonFiltrar">Filtrar</string>
+    <string name="botonCerrarFiltros">Cerrar Filtros</string>
+
 </resources>

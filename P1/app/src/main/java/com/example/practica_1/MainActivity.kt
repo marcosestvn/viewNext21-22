@@ -1,10 +1,14 @@
 package com.example.practica_1
 
 import android.app.AlertDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
+import android.widget.SeekBar
 import android.widget.Toast
 
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +23,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.Serializable
 
 
 class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
@@ -27,9 +32,11 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
     private lateinit var adapter: FacturaAdapter
 
-    private var _facturas= mutableListOf<Factura>()
+    private var _facturas = mutableListOf<Factura>()
 
     private val BASE_URL = "http://viewnextandroid.mocklab.io/"
+
+    private var importeMaximo: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +45,7 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         )
         setContentView(binding.root)
         getFacturas()
+
         initRecyclerView()
         setSupportActionBar(binding.toolbar)
     }
@@ -47,12 +55,24 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    if(item.itemId==R.id.icono_filtro){
+        val intent: Intent = Intent(this, SegundaActividad::class.java)
+        intent.putExtra("importeMaximo", importeMaximo)
+        startActivity(intent)
+        //Como hacer para que no se me creen varias actividades de mostrar facturas y al darle al boton del movil para atrás no se stackeen 
+    }
+        return super.onOptionsItemSelected(item)
+
+    }
+
+
     //Iniciamos el recyclerview con su correspondiente adaptador y lista de datos a mostrar,
     //también indicamos la disposición que queremos en nuestra vista, en este caso vertical
     private fun initRecyclerView() {
-        adapter= FacturaAdapter(this)
+        adapter = FacturaAdapter(this)
         binding.recyclerFacturas.layoutManager = LinearLayoutManager(this)
-        binding.recyclerFacturas.adapter=adapter
+        binding.recyclerFacturas.adapter = adapter
         adapter.submitList(_facturas)
 
     }
@@ -71,26 +91,41 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         CoroutineScope(Dispatchers.IO).launch {
             val call: Response<RespuestaFactura> =
                 getRetrofit().create(FacturaApi::class.java).getFacturas()
-           runOnUiThread {
+            runOnUiThread {
 
-               //Si la llamada es exitosa almacenamos las facturas recibidas de la API en una variable local
-               if (call.isSuccessful) {
-                   val callBody = call.body()
+                //Si la llamada es exitosa almacenamos las facturas recibidas de la API en una variable local
+                if (call.isSuccessful) {
+                    val callBody = call.body()
 
-                   //si callBody es nullo facturas = lista vacía
-                   val facturas = callBody?.facturas ?:emptyList()
-                   _facturas.clear()
+                    //si callBody es nullo facturas = lista vacía
+                    var facturas = callBody?.facturas ?: emptyList()
+
+                    //Borramos los dato que puedan haber en _facturas y añadimos todas las facturas obtenidas desde la API
+                    _facturas.clear()
                     _facturas.addAll(facturas)
-                   adapter.notifyDataSetChanged()
+
+                    //Ahora que tenemos el conjunto total de facturas calculamos el importe máximo de estas
+                    importeMaximo = getMaxImporte(_facturas)
+
+                    //Si existen los campos correspondientes a los filtros enviados desde la SegundaActividad (donde se escogen los diferentes filtros)
+                    // realizamos los correspondientes filtros
+                    if (intent.hasExtra("importeFiltro")) {
+                        val maximoFiltro = intent.getIntExtra("importeFiltro", 0).toInt()
+                        facturas =_facturas.filter { it.importeOrdenacion.toInt() < maximoFiltro }
+                        _facturas.clear()
+                        _facturas.addAll(facturas)
+
+                    }
+
+                    adapter.notifyDataSetChanged()
 
 
-
-               }
-               //Si la llamada no es exitosa mostramos un error por consola
-               else {
-                   Log.i("MyTag", "ERROR COROUTINESCOPE ")
-               }
-           }
+                }
+                //Si la llamada no es exitosa mostramos un error por consola
+                else {
+                    Log.i("MyTag", "ERROR COROUTINESCOPE ")
+                }
+            }
 
         }
     }
@@ -103,12 +138,22 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Título")
         builder.setMessage("Está función aún no está disponible")
-        builder.setNeutralButton("Cerrar"){
-            dialog, which ->{}
+        builder.setNeutralButton("Cerrar") { dialog, which ->
+            {}
         }
 
         //Mostramos el dialog
         builder.show()
+    }
+
+    private fun getMaxImporte(facturas: List<Factura>): Double {
+        var max: Double = 0.00
+
+        for (factura in facturas) {
+            if (factura.importeOrdenacion > max) max = factura.importeOrdenacion
+        }
+        return max
+
     }
 
 }

@@ -5,4 +5,6 @@
     <dimen name="fecha_factura_text_size">24dp</dimen>
     <dimen name="estado_text_size">18sp</dimen>
     <dimen name="importe_text_size">20sp</dimen>
+    <dimen name="tamño_cabecera">42sp</dimen>
+    <dimen name="tamaño_cabeceras_filtros"></dimen>
 </resources>
