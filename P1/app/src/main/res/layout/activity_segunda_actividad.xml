@@ -14,15 +14,16 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="#FAF8F8"
             tools:context=".SegundaActividad">
+
 
             <TextView
                 android:id="@+id/filtros_1_cabecera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/filtros_titulo_fecha"
                 android:textColor="#070404"
                 android:textSize="@dimen/fecha_factura_text_size"
@@ -31,23 +32,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cabecera" />
-
-
-            <TextView
-                android:id="@+id/hasta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="168dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/hasta"
-                android:textSize="@dimen/estado_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendarioDesde"
-                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/cabecera"
@@ -74,60 +58,23 @@
                 app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
             <TextView
-                android:id="@+id/desde"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="337dp"
-                android:layout_marginBottom="24dp"
-                android:text="@string/desde"
-                android:textSize="@dimen/estado_text_size"
-                app:layout_constraintBottom_toTopOf="@+id/calendarioDesde"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filtros_1_cabecera" />
-
-            <CalendarView
-                android:id="@+id/calendarioDesde"
-                android:layout_width="153dp"
-                android:layout_height="97dp"
-                android:layout_marginTop="8dp"
-                android:textAlignment="textStart"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/desde" />
-
-            <CalendarView
-                android:id="@+id/calendarView2"
-                android:layout_width="114dp"
-                android:layout_height="87dp"
-                android:layout_marginTop="8dp"
-                android:weekNumberColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hasta" />
-
-            <TextView
                 android:id="@+id/valorSlider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:text="0"
-                app:layout_constraintBottom_toTopOf="@+id/sliderImporte"
+                android:textColor="@color/verde_proyecto"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendarView2"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/cabeceraImporte" />
 
             <SeekBar
                 android:id="@+id/sliderImporte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="36dp"
                 android:layout_marginRight="24dp"
                 android:backgroundTint="@color/verde_proyecto"
                 android:max="100"
@@ -148,7 +95,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sliderImporte" />
+                app:layout_constraintTop_toBottomOf="@+id/separador_" />
 
             <Button
                 android:id="@+id/botonEliminarFiltros"
@@ -156,12 +103,129 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/botonCerrarFiltros"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/botonFiltrar"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/botonFiltrar" />
+
+            <TextView
+                android:id="@+id/fechaDesde"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/light_gray"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/dia_mes_año"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/desde"
+                app:layout_constraintTop_toBottomOf="@+id/desde" />
+
+            <TextView
+                android:id="@+id/desde"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/desde"
+                android:textSize="@dimen/estado_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filtros_1_cabecera" />
+
+            <TextView
+                android:id="@+id/fechaHasta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/light_gray"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="@string/dia_mes_año"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/fechaDesde"
+                app:layout_constraintStart_toStartOf="@+id/hasta"
+                app:layout_constraintTop_toBottomOf="@+id/hasta" />
+
+            <TextView
+                android:id="@+id/hasta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="50dp"
+                android:text="@string/hasta"
+                android:textSize="@dimen/estado_text_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.777"
+                app:layout_constraintStart_toEndOf="@+id/desde"
+                app:layout_constraintTop_toBottomOf="@+id/filtros_1_cabecera" />
+
+            <TextView
+                android:id="@+id/separador_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="@dimen/normal_padding"
+                android:background="@drawable/factura_border_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fechaDesde" />
+
+            <TextView
+                android:id="@+id/separador_"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/normal_padding"
+                android:background="@drawable/factura_border_bottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sliderImporte" />
+
+            <TextView
+                android:id="@+id/cabeceraImporte"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/filtros_titulo_importe"
+                android:textColor="@color/black"
+                android:textSize="@dimen/fecha_factura_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separador_1" />
+
+            <TextView
+                android:id="@+id/min_seekbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="@string/min_seekbar"
+                android:textColor="@color/verde_proyecto"
+                app:layout_constraintBottom_toTopOf="@+id/sliderImporte"
+                app:layout_constraintEnd_toStartOf="@+id/sliderImporte"
+                app:layout_constraintHorizontal_bias="0.421"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cabeceraImporte"
+                app:layout_constraintVertical_bias="0.8" />
+
+            <TextView
+                android:id="@+id/max_seekbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max"
+                android:textColor="@color/verde_proyecto"
+                app:layout_constraintBottom_toTopOf="@+id/sliderImporte"
+                app:layout_constraintEnd_toEndOf="@+id/sliderImporte"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/min_seekbar"
+                app:layout_constraintTop_toBottomOf="@+id/valorSlider" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

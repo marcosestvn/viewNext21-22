@@ -24,6 +24,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.Serializable
+import java.text.SimpleDateFormat
 
 
 class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         val intent: Intent = Intent(this, SegundaActividad::class.java)
         intent.putExtra("importeMaximo", importeMaximo)
         startActivity(intent)
-        //Como hacer para que no se me creen varias actividades de mostrar facturas y al darle al boton del movil para atrás no se stackeen 
+        //Como hacer para que no se me creen varias actividades de mostrar facturas y al darle al boton del movil para atrás no se stackeen
     }
         return super.onOptionsItemSelected(item)
 
@@ -110,8 +111,15 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
                     //Si existen los campos correspondientes a los filtros enviados desde la SegundaActividad (donde se escogen los diferentes filtros)
                     // realizamos los correspondientes filtros
                     if (intent.hasExtra("importeFiltro")) {
-                        val maximoFiltro = intent.getIntExtra("importeFiltro", 0).toInt()
-                        facturas =_facturas.filter { it.importeOrdenacion.toInt() < maximoFiltro }
+
+                        //Variables para almacenar los datos del intent recibido
+                        val fecha1 = intent.getStringExtra("fechaDesde")
+                        val fecha2 = intent.getStringExtra("fechaHasta")
+                        val maximoFiltro = intent.getIntExtra("importeFiltro", 0)
+
+                        facturas =_facturas.filter { it.importeOrdenacion < maximoFiltro &&
+                                validarFechas(it.fecha, fecha1!!, fecha2!!)}
+
                         _facturas.clear()
                         _facturas.addAll(facturas)
 
@@ -156,4 +164,14 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
     }
 
+
+    //Parseamos la fecha de la factura para compararlas en orden AÑO -> MES -> DIA
+    private fun validarFechas(fechaFiltrado : String,fecha1: String, fecha2: String): Boolean {
+
+        val parser =  SimpleDateFormat("dd/MM/yyyy")
+        val formatter = SimpleDateFormat("yyyy/MM/dd")
+        val fechaFiltradoFormatted = formatter.format(parser.parse(fechaFiltrado))
+        return (fechaFiltradoFormatted.compareTo(fecha1)>=0 && fechaFiltrado.compareTo(fecha2)<=0)
+
+}
 }

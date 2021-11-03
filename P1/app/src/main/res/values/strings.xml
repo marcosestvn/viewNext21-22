@@ -9,6 +9,11 @@
     <string name="hasta">Hasta:</string>
     <string name="filtros_titulo_importe">Por un importe</string>
     <string name="botonFiltrar">Filtrar</string>
-    <string name="botonCerrarFiltros">Cerrar Filtros</string>
+    <string name="botonCerrarFiltros">Limpiar filtros</string>
+
+
+    <string name="dia_mes_año">día/mes/año</string>
+
+    <string name="min_seekbar">0 €</string>
 
 </resources>
