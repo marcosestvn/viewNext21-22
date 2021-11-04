@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         )
         setContentView(binding.root)
         getFacturas()
-
         initRecyclerView()
         setSupportActionBar(binding.toolbar)
     }
@@ -116,11 +115,15 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
                         val fecha1 = intent.getStringExtra("fechaDesde")
                         val fecha2 = intent.getStringExtra("fechaHasta")
                         val maximoFiltro = intent.getIntExtra("importeFiltro", 0)
+                        val estados: MutableList<String>  = intent.getSerializableExtra("estadosSeleccionados") as MutableList<String>
+                        println(estados)
 
                         facturas =_facturas.filter { it.importeOrdenacion < maximoFiltro &&
-                                validarFechas(it.fecha, fecha1!!, fecha2!!)}
+                                validarFechas(it.fecha, fecha1!!, fecha2!!) &&
+                                estados.contains(it.descEstado.toString())}
 
                         _facturas.clear()
+
                         _facturas.addAll(facturas)
 
                     }

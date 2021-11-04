@@ -84,30 +84,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/valorSlider" />
 
-            <Button
-                android:id="@+id/botonFiltrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@color/verde_proyecto"
-                android:text="@string/botonFiltrar"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/separador_" />
-
-            <Button
-                android:id="@+id/botonEliminarFiltros"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/botonCerrarFiltros"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/botonFiltrar" />
-
             <TextView
                 android:id="@+id/fechaDesde"
                 android:layout_width="wrap_content"
@@ -176,7 +152,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/fechaDesde" />
 
             <TextView
-                android:id="@+id/separador_"
+                android:id="@+id/separador_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -226,6 +202,108 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/min_seekbar"
                 app:layout_constraintTop_toBottomOf="@+id/valorSlider" />
+
+            <TextView
+                android:id="@+id/cabeceraEstado"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/filtros_titulo_estados"
+                android:textColor="@color/black"
+                android:textSize="@dimen/estado_text_size"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/idOpcion1"
+                app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@+id/separador_2"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <CheckBox
+                android:id="@+id/idOpcion1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/opcion1"
+                app:layout_constraintBottom_toTopOf="@+id/idOpcion2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cabeceraEstado" />
+
+            <CheckBox
+                android:id="@+id/idOpcion2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/opcion2"
+                app:layout_constraintBottom_toTopOf="@+id/idOpcion3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/idOpcion1" />
+
+            <CheckBox
+                android:id="@+id/idOpcion3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/opcion3"
+                app:layout_constraintBottom_toTopOf="@+id/idOpcion4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/idOpcion2" />
+
+            <CheckBox
+                android:id="@+id/idOpcion4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="232dp"
+                android:minHeight="48dp"
+                android:text="@string/opcion4"
+                app:layout_constraintBottom_toTopOf="@+id/idOpcion5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/idOpcion3" />
+
+            <CheckBox
+                android:id="@+id/idOpcion5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/opcion5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/idOpcion4" />
+
+            <Button
+                android:id="@+id/botonFiltrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/verde_proyecto"
+                android:text="@string/botonFiltrar"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/idOpcion5"
+                tools:ignore="TextContrastCheck" />
+
+            <Button
+                android:id="@+id/botonEliminarFiltros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/botonCerrarFiltros"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/botonFiltrar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

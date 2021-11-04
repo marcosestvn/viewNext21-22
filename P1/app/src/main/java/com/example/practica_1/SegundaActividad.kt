@@ -3,30 +3,44 @@ package com.example.practica_1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.CalendarView
+import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.Toast
 import com.example.practica_1.databinding.ActivitySegundaActividadBinding
+import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class SegundaActividad : AppCompatActivity() {
     private lateinit var binding: ActivitySegundaActividadBinding
-    private lateinit var calendarView: CalendarView
     var valorSeekBar: Int = 0
     var fecha_Hasta: String = ""
     var fecha_Desde: String = ""
     var flag_fecha_Hasta: Boolean = false
     var flag_fecha_Desde: Boolean = false
+    val parser = SimpleDateFormat("dd/MM/yyyy")
+    val formatter = SimpleDateFormat("yyyy/MM/dd")
+    val listaCheckBoxChecked: MutableList<String> = ArrayList()
+
+    /* Campos checkbox */
+    lateinit var opcion1: CheckBox
+    lateinit var opcion2: CheckBox
+    lateinit var opcion3: CheckBox
+    lateinit var opcion4: CheckBox
+    lateinit var opcion5: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySegundaActividadBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        bind()
+    }
 
 
+    private fun bind() {
+        //Bindeos Slider Importe
         binding.sliderImporte.max = intent.getDoubleExtra("importeMaximo", 0.00).toInt() + 1
+
+        binding.maxSeekbar.text = "${binding.sliderImporte.max} €"
 
         binding.sliderImporte.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
@@ -40,18 +54,7 @@ class SegundaActividad : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        binding.maxSeekbar.text = "${binding.sliderImporte.max} €"
-
-        binding.botonCerrarFiltro.setOnClickListener {
-            finish()
-        }
-
-        binding.botonEliminarFiltros.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
+        //Bindeos Dialog selector de fechas
         binding.fechaDesde.setOnClickListener {
             showDateDialog(binding.fechaDesde.id)
         }
@@ -60,55 +63,52 @@ class SegundaActividad : AppCompatActivity() {
             showDateDialog(binding.fechaHasta.id)
         }
 
-        binding.botonFiltrar.setOnClickListener {
+
+        //Bindeo botón Cerrar Actividad
+        binding.botonCerrarFiltro.setOnClickListener {
+            finish()
+        }
+
+        //Bindeo boton Eliminar Filtros
+        binding.botonEliminarFiltros.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            fecha_Desde = binding.fechaDesde.text.toString()
-            fecha_Hasta = binding.fechaHasta.text.toString()
-            println(fecha_Hasta)
-            val parser =  SimpleDateFormat("dd/MM/yyyy")
-            val formatter = SimpleDateFormat("yyyy/MM/dd")
-            val formattedDate1 = formatter.format(parser.parse(fecha_Desde))
-            val formattedDate2 = formatter.format(parser.parse(fecha_Hasta))
-            println(formattedDate1)
-            println(formattedDate2)
-            println(formattedDate1.compareTo(formattedDate2))
+            startActivity(intent)
+            finish()
+        }
+
+        //Bindeo botón filtrar y lógica de validación de campos
+        binding.botonFiltrar.setOnClickListener {
+            recogerYValidarCheckBox()
             //Validamos que el importe se encuentre en rango y que se haya introducido una fecha en sus correspondientes campos
             if ((valorSeekBar >= 0 && valorSeekBar <= binding.sliderImporte.max) &&
                 (flag_fecha_Desde) && (flag_fecha_Hasta)
             ) {
-                /*
-                 if (validarFechas(fecha_Desde, fecha_Hasta)) {
+
+
+                fecha_Desde = binding.fechaDesde.text.toString()
+                fecha_Hasta = binding.fechaHasta.text.toString()
+
+                val formattedDate1 = formatter.format(parser.parse(fecha_Desde))
+                val formattedDate2 = formatter.format(parser.parse(fecha_Hasta))
+
+                if (formattedDate1.compareTo(formattedDate2) <= 0) {
+                    val intent = Intent(this, MainActivity::class.java)
                     intent.putExtra("importeFiltro", valorSeekBar)
-                    intent.putExtra("fechaDesde", fecha_Desde)
-                    intent.putExtra("fechaHasta", fecha_Hasta)
+                    intent.putExtra("fechaDesde", formattedDate1)
+                    intent.putExtra("fechaHasta", formattedDate2)
+                    intent.putExtra("estadosSeleccionados", listaCheckBoxChecked as Serializable)
 
-                        finish()
-                        startActivity(intent)
-                }
-                 */
-                     if(formattedDate1.compareTo(formattedDate2) <=0){
-                         intent.putExtra("importeFiltro", valorSeekBar)
-                         intent.putExtra("fechaDesde", formattedDate1)
-                         intent.putExtra("fechaHasta", formattedDate2)
+                    finish()
+                    startActivity(intent)
 
-                         finish()
-                         startActivity(intent)
-                     }
-               else {
+                } else {
                     Toast.makeText(this, "Las fechas son erroneas", Toast.LENGTH_LONG).show()
 
                 }
-
-
             } else {
                 Toast.makeText(this, "Los filtros son erroneos", Toast.LENGTH_LONG).show()
-
             }
-
-
         }
-
-
     }
 
     private fun showDateDialog(id: Int) {
@@ -131,43 +131,24 @@ class SegundaActividad : AppCompatActivity() {
         }
     }
 
-    private fun bind(valorSeekBar: Int, fechaDesde: String, fechaHasta: String) {
-
-
-    }
-
-    //Función para validar que los filtros hayan sido definidos
-    private fun validarFechas(fecha_Desde: String, fecha_Hasta: String): Boolean {
-
-            return false
-        /*
-        val separador: String = "/"
-        var desde_separados: List<String> = fecha_Desde.split(separador)
-        var hasta_separados: List<String> = fecha_Hasta.split(separador)
-        println(desde_separados[2])
-        println(hasta_separados[2])
-
-        //Comparamos los años
-        if (desde_separados[2] < hasta_separados[2]) {
-            return true
-        }else if(desde_separados[2]==hasta_separados[2]){
-            println("Años iguales")
-            //Si es el mismo año comparamos los meses
-            if (desde_separados[1] < hasta_separados[1]) {
-                return true
-
-            }else if ( desde_separados[1] == hasta_separados[1]){
-                println("Meses iguales")
-
-                //Si es el mimso mes comparamos el día, nos da igual si es dia desde es menor o igual
-                // que el dia hasta, ambas son válidas
-                if(desde_separados[0] <= hasta_separados[0])return true
-
-                    return false
-            }
+    private fun recogerYValidarCheckBox() {
+            listaCheckBoxChecked.clear()
+        if (binding.idOpcion1.isChecked) {
+            listaCheckBoxChecked.add("Pagada")
         }
-        return false
 
-         */
+        if (binding.idOpcion2.isChecked) {
+            listaCheckBoxChecked.add("Anulada")
+        }
+        if (binding.idOpcion3.isChecked) {
+            listaCheckBoxChecked.add("Cuota fija")
+        }
+        if (binding.idOpcion4.isChecked) {
+            listaCheckBoxChecked.add("Pendiente de pago")
+        }
+        if (binding.idOpcion5.isChecked) {
+            listaCheckBoxChecked.add("Plan de cuota")
+        }
+        println(listaCheckBoxChecked.toString())
     }
 }

@@ -16,4 +16,12 @@
 
     <string name="min_seekbar">0 €</string>
 
+    <!--CheckBox Strings-->
+    <string name="filtros_titulo_estados">Filtrar por estados</string>
+    <string name="opcion1">Pagadas</string>
+    <string name="opcion2">Anuladas</string>
+    <string name="opcion3">Cuota Fija</string>
+    <string name="opcion4">Pendientes de pago</string>
+    <string name="opcion5">Plan de pago</string>
+
 </resources>
