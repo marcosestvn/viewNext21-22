@@ -132,7 +132,11 @@ class SegundaActividad : AppCompatActivity() {
     }
 
     private fun recogerYValidarCheckBox() {
+        //Limpiamos los valores residuales que puedan quedar en nuestra lista de intentos previos de filtrado
             listaCheckBoxChecked.clear()
+
+        //Evaluamos individualmente cada campo del checkbox
+        //Añadiendo su correspondiente estado ( no sé si deberiamos guardar los strings en string.xml)
         if (binding.idOpcion1.isChecked) {
             listaCheckBoxChecked.add("Pagada")
         }

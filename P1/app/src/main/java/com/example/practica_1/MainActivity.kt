@@ -8,6 +8,7 @@ import android.os.Parcelable
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 
@@ -17,14 +18,13 @@ import com.example.practica_1.Model.RespuestaFactura
 import com.example.practica_1.Network.FacturaApi
 import com.example.practica_1.RecyclerView.FacturaAdapter
 import com.example.practica_1.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.Serializable
 import java.text.SimpleDateFormat
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         binding = ActivityMainBinding.inflate(
             layoutInflater
         )
+        binding.contenido.visibility= View.GONE
         setContentView(binding.root)
         getFacturas()
         initRecyclerView()
@@ -129,6 +130,9 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
                     }
 
                     adapter.notifyDataSetChanged()
+                    Thread.sleep(3000)
+                    binding.contenido.visibility= View.VISIBLE
+                    binding.progressBar.visibility= View.GONE
 
 
                 }
