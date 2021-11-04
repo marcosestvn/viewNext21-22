@@ -23,7 +23,6 @@ class FacturaService {
         return withContext(Dispatchers.IO){
             val response = retrofit.create(FacturaApi::class.java).getFacturas()
             response
-
         }
     }
 }

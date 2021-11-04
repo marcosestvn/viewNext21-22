@@ -4,13 +4,11 @@ import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.SeekBar
-import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practica_1.Model.Factura
@@ -22,9 +20,7 @@ import kotlinx.coroutines.*
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.Serializable
 import java.text.SimpleDateFormat
-import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
@@ -58,13 +54,12 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
     if(item.itemId==R.id.icono_filtro){
-        val intent: Intent = Intent(this, SegundaActividad::class.java)
+        val intent: Intent = Intent(this, FiltroActividad::class.java)
         intent.putExtra("importeMaximo", importeMaximo)
         startActivity(intent)
         //Como hacer para que no se me creen varias actividades de mostrar facturas y al darle al boton del movil para atrás no se stackeen
     }
         return super.onOptionsItemSelected(item)
-
     }
 
 
@@ -74,6 +69,7 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         adapter = FacturaAdapter(this)
         binding.recyclerFacturas.layoutManager = LinearLayoutManager(this)
         binding.recyclerFacturas.adapter = adapter
+        binding.recyclerFacturas.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         adapter.submitList(_facturas)
 
     }
@@ -130,9 +126,8 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
                     }
 
                     adapter.notifyDataSetChanged()
-                    Thread.sleep(3000)
-                    binding.contenido.visibility= View.VISIBLE
-                    binding.progressBar.visibility= View.GONE
+
+                    mostrarLoader()
 
 
                 }
@@ -181,4 +176,10 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
         return (fechaFiltradoFormatted.compareTo(fecha1)>=0 && fechaFiltrado.compareTo(fecha2)<=0)
 
 }
+
+    private fun mostrarLoader(){
+        Thread.sleep(3000)
+        binding.contenido.visibility= View.VISIBLE
+        binding.progressBar.visibility= View.GONE
+    }
 }

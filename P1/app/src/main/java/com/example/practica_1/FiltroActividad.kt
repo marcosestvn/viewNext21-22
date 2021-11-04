@@ -10,7 +10,7 @@ import com.example.practica_1.databinding.ActivitySegundaActividadBinding
 import java.io.Serializable
 import java.text.SimpleDateFormat
 
-class SegundaActividad : AppCompatActivity() {
+class FiltroActividad : AppCompatActivity() {
     private lateinit var binding: ActivitySegundaActividadBinding
     var valorSeekBar: Int = 0
     var fecha_Hasta: String = ""
@@ -122,11 +122,11 @@ class SegundaActividad : AppCompatActivity() {
         if (id == R.id.fechaDesde) {
 
             flag_fecha_Desde = true
-            binding.fechaDesde.text = "$day/$month/$year"
+            binding.fechaDesde.text = "$day/${month+1}/$year"
         } else {
             flag_fecha_Hasta = true
 
-            binding.fechaHasta.text = "$day/$month/$year"
+            binding.fechaHasta.text = "$day/${month+1}/$year"
 
         }
     }

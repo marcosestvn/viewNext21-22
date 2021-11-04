@@ -17,9 +17,11 @@ class DatePickerFragment(val listener : (year : Int, month : Int, day : Int ) ->
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val calendario : Calendar = Calendar.getInstance()
         val day = calendario.get(Calendar.DAY_OF_MONTH)
-        val month = calendario.get(Calendar.MONTH)
+        val month = calendario.get(Calendar.MONTH)-1
         val year = calendario.get(Calendar.YEAR)
-        val picker = DatePickerDialog(activity as Context,this,year,month,day )
+
+
+        val picker = DatePickerDialog(activity as Context,this,year,month+1,day )
         return picker
     }
 }

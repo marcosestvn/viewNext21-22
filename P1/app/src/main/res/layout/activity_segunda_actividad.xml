@@ -282,10 +282,12 @@
 
             <Button
                 android:id="@+id/botonFiltrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="185dp"
+                android:layout_height="65dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/verde_proyecto"
+                android:background="@drawable/round_button"
+                android:padding="10dp"
+                android:paddingLeft="@dimen/estado_text_size"
                 android:text="@string/botonFiltrar"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -295,15 +297,16 @@
 
             <Button
                 android:id="@+id/botonEliminarFiltros"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="185dp"
+                android:layout_height="65dp"
                 android:layout_marginTop="8dp"
+                android:background="@drawable/round_button_no_background"
                 android:text="@string/botonCerrarFiltros"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/botonFiltrar" />
+                app:layout_constraintTop_toBottomOf="@+id/botonFiltrar"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
