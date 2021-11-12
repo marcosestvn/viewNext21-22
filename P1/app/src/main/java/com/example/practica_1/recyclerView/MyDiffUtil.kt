@@ -1,9 +1,9 @@
-package com.example.practica_1.RecyclerView
+package com.example.practica_1.recyclerView
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.practica_1.Model.Factura
+import com.example.practica_1.model.Factura
 
-class MyDiffUtil():DiffUtil.ItemCallback<Factura>() {
+class MyDiffUtil :DiffUtil.ItemCallback<Factura>() {
 
     //Contenido de instancias facturas iguales
     override fun areContentsTheSame(oldItem: Factura, newItem: Factura): Boolean {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
 
@@ -48,10 +48,10 @@
         <TextView
             android:id="@+id/importeFactura"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:gravity="center_vertical|end"
+            android:gravity="center|end"
             android:text="@string/importe_factura"
             android:textColor="@color/black"
             android:textSize="@dimen/importe_text_size"
@@ -59,7 +59,7 @@
             app:layout_constraintEnd_toStartOf="@+id/botonPopUp"
             app:layout_constraintStart_toEndOf="@+id/fecha"
             app:layout_constraintTop_toTopOf="@+id/fecha"
-            app:layout_constraintVertical_bias="0.07999998" />
+            app:drawableBottomCompat="@drawable/factura_border_bottom" />
 
         <ImageView
             android:id="@+id/botonPopUp"
@@ -67,14 +67,13 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:paddingEnd="8dp"
-            android:paddingStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/importeFactura"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/importeFactura"
             app:layout_constraintTop_toTopOf="@+id/importeFactura"
             app:layout_constraintVertical_bias="0.485"
-            app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24"
-            android:contentDescription="@string/boton_factura"/>
+            android:contentDescription="@string/botonPopUp"
+            app:srcCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
 
         <TextView
             android:id="@+id/textView"

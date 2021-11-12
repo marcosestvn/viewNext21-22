@@ -16,10 +16,11 @@
         <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/drawable/factura_border_bottom.xml" value="0.264" />
         <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/drawable/round_button.xml" value="0.1" />
         <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/drawable/round_button_no_background.xml" value="0.1" />
-        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/activity_segunda_actividad.xml" value="0.22056159420289856" />
-        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/item_factura.xml" value="0.536" />
-        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/loader.xml" value="0.1" />
+        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout-v23/item_factura.xml" value="0.536" />
+        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/activity_main.xml" value="0.4" />
+        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/activity_segunda_actividad.xml" value="0.264" />
+        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/item_factura.xml" value="0.4" />
+        <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/layout/loader.xml" value="0.536" />
         <entry key="..\:/Users/6001937/Desktop/Git2/viewNext21-22/P1/app/src/main/res/menu/menu.xml" value="0.13020833333333334" />
       </map>
     </option>

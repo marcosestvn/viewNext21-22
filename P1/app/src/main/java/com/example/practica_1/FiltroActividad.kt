@@ -1,34 +1,31 @@
 package com.example.practica_1
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.CheckBox
 import android.widget.SeekBar
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.practica_1.databinding.ActivitySegundaActividadBinding
-import java.io.Serializable
-import java.text.SimpleDateFormat
+import com.example.practica_1.model.WrapperFiltro
+import com.google.gson.Gson
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+
 
 class FiltroActividad : AppCompatActivity() {
     private lateinit var binding: ActivitySegundaActividadBinding
-    var valorSeekBar: Int = 0
-    var fecha_Hasta: String = ""
-    var fecha_Desde: String = ""
-    var flag_fecha_Hasta: Boolean = false
-    var flag_fecha_Desde: Boolean = false
-    val parser = SimpleDateFormat("dd/MM/yyyy")
-    val formatter = SimpleDateFormat("yyyy/MM/dd")
-    val listaCheckBoxChecked: MutableList<String> = ArrayList()
+    var valorSeekBar: Int =0
+    private lateinit var fecha1: DateTime
+    private lateinit var fecha2: DateTime
 
-    /* Campos checkbox */
-    lateinit var opcion1: CheckBox
-    lateinit var opcion2: CheckBox
-    lateinit var opcion3: CheckBox
-    lateinit var opcion4: CheckBox
-    lateinit var opcion5: CheckBox
+
+
+    lateinit var wrapperFiltro: WrapperFiltro
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        wrapperFiltro =
+            Gson().fromJson(intent.getStringExtra(Constantes.wrapper).toString(), WrapperFiltro::class.java)
+
         super.onCreate(savedInstanceState)
         binding = ActivitySegundaActividadBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -37,21 +34,21 @@ class FiltroActividad : AppCompatActivity() {
 
 
     private fun bind() {
-        //Bindeos Slider Importe
-        binding.sliderImporte.max = intent.getDoubleExtra("importeMaximo", 0.00).toInt() + 1
 
-        binding.maxSeekbar.text = "${binding.sliderImporte.max} €"
+        bindeoConDatosWrapper()
 
         binding.sliderImporte.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
                 valorSeekBar = progress
-                binding.valorSlider.text = "$valorSeekBar €"
+                binding.valorSlider.text =concatenar(valorSeekBar.toString(),"€")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                wrapperFiltro.setImporteFiltro(valorSeekBar)
+            }
         })
 
         //Bindeos Dialog selector de fechas
@@ -66,93 +63,161 @@ class FiltroActividad : AppCompatActivity() {
 
         //Bindeo botón Cerrar Actividad
         binding.botonCerrarFiltro.setOnClickListener {
+            recogerYValidarCheckBox()
             finish()
         }
 
         //Bindeo boton Eliminar Filtros
         binding.botonEliminarFiltros.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+
+            wrapperFiltro.setImporteFiltro(0)
+            wrapperFiltro.setEstadosFiltro(ArrayList<String>())
+            wrapperFiltro.setFecha_desde("")
+            wrapperFiltro.setFecha_hasta("")
+            binding.valorSlider.text=Constantes.valorIniciarSlider
+            binding.sliderImporte.progress=0
+           bind()
+
         }
 
         //Bindeo botón filtrar y lógica de validación de campos
         binding.botonFiltrar.setOnClickListener {
             recogerYValidarCheckBox()
-            //Validamos que el importe se encuentre en rango y que se haya introducido una fecha en sus correspondientes campos
-            if ((valorSeekBar >= 0 && valorSeekBar <= binding.sliderImporte.max) &&
-                (flag_fecha_Desde) && (flag_fecha_Hasta)
-            ) {
 
+            val intent = Intent(this, MainActivity::class.java)
 
-                fecha_Desde = binding.fechaDesde.text.toString()
-                fecha_Hasta = binding.fechaHasta.text.toString()
+            intent.putExtra(Constantes.wrapperFiltro, Gson().toJson(wrapperFiltro).toString())
 
-                val formattedDate1 = formatter.format(parser.parse(fecha_Desde))
-                val formattedDate2 = formatter.format(parser.parse(fecha_Hasta))
+            setResult(RESULT_OK,intent)
 
-                if (formattedDate1.compareTo(formattedDate2) <= 0) {
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.putExtra("importeFiltro", valorSeekBar)
-                    intent.putExtra("fechaDesde", formattedDate1)
-                    intent.putExtra("fechaHasta", formattedDate2)
-                    intent.putExtra("estadosSeleccionados", listaCheckBoxChecked as Serializable)
-
-                    finish()
-                    startActivity(intent)
-
-                } else {
-                    Toast.makeText(this, "Las fechas son erroneas", Toast.LENGTH_LONG).show()
-
-                }
-            } else {
-                Toast.makeText(this, "Los filtros son erroneos", Toast.LENGTH_LONG).show()
-            }
+            finish()
         }
     }
 
-    private fun showDateDialog(id: Int) {
-        val datePicker =
-            DatePickerFragment { day, month, year -> onDateSelected(day, month, year, id) }
-        datePicker.show(supportFragmentManager, "datePicker")
-    }
 
     private fun onDateSelected(day: Int, month: Int, year: Int, id: Int) {
-
+        val ff = DateTimeFormat.forPattern(Constantes.defaultPatternFecha)
         if (id == R.id.fechaDesde) {
+            fecha1 = DateTimeFormat.forPattern(Constantes.defaultPatternFecha).parseDateTime("$day/${month + 1}/$year")
 
-            flag_fecha_Desde = true
-            binding.fechaDesde.text = "$day/${month+1}/$year"
+            binding.fechaDesde.text = concatenarSinEspacios(day.toString(),"/",(month + 1).toString(),"/",year.toString())
+
+            wrapperFiltro.setFecha_desde(ff.print(fecha1))
+
+
         } else {
-            flag_fecha_Hasta = true
+            fecha2 = DateTimeFormat.forPattern(Constantes.defaultPatternFecha).parseDateTime("$day/${month + 1}/$year")
 
-            binding.fechaHasta.text = "$day/${month+1}/$year"
+            println(fecha2)
+            binding.fechaHasta.text = concatenarSinEspacios(day.toString(),"/",(month + 1).toString(),"/",year.toString())
+
+            wrapperFiltro.setFecha_hasta(ff.print(fecha2))
 
         }
     }
 
     private fun recogerYValidarCheckBox() {
-        //Limpiamos los valores residuales que puedan quedar en nuestra lista de intentos previos de filtrado
-            listaCheckBoxChecked.clear()
 
-        //Evaluamos individualmente cada campo del checkbox
-        //Añadiendo su correspondiente estado ( no sé si deberiamos guardar los strings en string.xml)
+        //Se evalua individualmente cada campo del checkbox
+        //Se añade  su correspondiente estado ( no sé si deberiamos guardar los strings en string.xml)
         if (binding.idOpcion1.isChecked) {
-            listaCheckBoxChecked.add("Pagada")
+            wrapperFiltro.introducirEstadoFiltro(Constantes.opcion1)
+        }else{
+            wrapperFiltro.eliminarEstadoFiltro(Constantes.opcion1)
         }
 
         if (binding.idOpcion2.isChecked) {
-            listaCheckBoxChecked.add("Anulada")
+            wrapperFiltro.introducirEstadoFiltro(Constantes.opcion2)
+        }else{
+            wrapperFiltro.eliminarEstadoFiltro(Constantes.opcion2)
         }
+
         if (binding.idOpcion3.isChecked) {
-            listaCheckBoxChecked.add("Cuota fija")
+            wrapperFiltro.introducirEstadoFiltro(Constantes.opcion3)
+        }else{
+            wrapperFiltro.eliminarEstadoFiltro(Constantes.opcion3)
         }
+
         if (binding.idOpcion4.isChecked) {
-            listaCheckBoxChecked.add("Pendiente de pago")
+            wrapperFiltro.introducirEstadoFiltro(Constantes.opcion4)
+        }else{
+            wrapperFiltro.eliminarEstadoFiltro(Constantes.opcion4)
         }
+
         if (binding.idOpcion5.isChecked) {
-            listaCheckBoxChecked.add("Plan de cuota")
+            wrapperFiltro.introducirEstadoFiltro(Constantes.opcion5)
+
+        }else{
+            wrapperFiltro.eliminarEstadoFiltro(Constantes.opcion5)
         }
-        println(listaCheckBoxChecked.toString())
+
+
     }
+
+    private fun pintarCheckBox(datosPrevios:List<String>){
+
+        binding.idOpcion1.isChecked = datosPrevios.contains(Constantes.opcion1)
+        binding.idOpcion2.isChecked = datosPrevios.contains(Constantes.opcion2)
+        binding.idOpcion3.isChecked = datosPrevios.contains(Constantes.opcion3)
+        binding.idOpcion4.isChecked = datosPrevios.contains(Constantes.opcion4)
+        binding.idOpcion5.isChecked = datosPrevios.contains(Constantes.opcion5)
+    }
+
+    private fun bindeoConDatosWrapper(){
+        //Slider
+        binding.sliderImporte.progress=wrapperFiltro.getImporteFiltro()
+        binding.sliderImporte.max = wrapperFiltro.getImporteMaximo()
+        binding.maxSeekbar.text = concatenar(wrapperFiltro.importeMaximo.toString(),"€")
+        binding.valorSlider.text = wrapperFiltro.getImporteFiltro().toString()
+
+        //CheckBox
+        pintarCheckBox(wrapperFiltro.estadosFiltro)
+
+        //DatePickers
+        if(wrapperFiltro.getFecha_desde().isEmpty()){
+            binding.fechaDesde.text=getString(R.string.dia_mes_año)
+
+        }else{
+            binding.fechaDesde.text=wrapperFiltro.getFecha_desde()
+        }
+
+        if(wrapperFiltro.getFecha_hasta().isEmpty()){
+            binding.fechaHasta.text=getString(R.string.dia_mes_año)
+        }else{
+            binding.fechaHasta.text=wrapperFiltro.getFecha_hasta()
+
+        }
+
+    }
+
+    private fun showDateDialog(id: Int) {
+        val datePicker =
+            DatePickerFragment { day, month, year -> onDateSelected(day, month, year, id) }
+
+        if(id == R.id.fechaDesde){
+            if(wrapperFiltro.getFecha_hasta().isNotEmpty()){
+                datePicker.setMaxDate(wrapperFiltro.getFecha_hasta())
+            }
+            if(wrapperFiltro.getFecha_desde().isNotEmpty()){
+                datePicker.setDate(wrapperFiltro.getFecha_desde())
+            }
+        }
+
+
+        if(id == R.id.fechaHasta){
+            if(wrapperFiltro.getFecha_desde().isNotEmpty()){
+                datePicker.setMinDate(wrapperFiltro.getFecha_desde())
+            }
+            if(wrapperFiltro.getFecha_hasta().isNotEmpty()){
+                datePicker.setDate(wrapperFiltro.getFecha_hasta())
+            }
+
+        }
+        datePicker.show(supportFragmentManager, "datePicker")
+
+
+    }
+
+
+
 }

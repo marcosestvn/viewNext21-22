@@ -1,7 +1,6 @@
-package com.example.practica_1.Network
+package com.example.practica_1.network
 
-import com.example.practica_1.Model.Factura
-import com.example.practica_1.Model.RespuestaFactura
+import com.example.practica_1.model.RespuestaFactura
 import retrofit2.Response
 import retrofit2.http.GET
 

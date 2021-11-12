@@ -1,29 +1,32 @@
 package com.example.practica_1
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
-
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.practica_1.Model.Factura
-import com.example.practica_1.Model.RespuestaFactura
-import com.example.practica_1.Network.FacturaApi
-import com.example.practica_1.RecyclerView.FacturaAdapter
 import com.example.practica_1.databinding.ActivityMainBinding
-import kotlinx.coroutines.*
+import com.example.practica_1.model.Factura
+import com.example.practica_1.model.RespuestaFactura
+import com.example.practica_1.model.WrapperFiltro
+import com.example.practica_1.network.FacturaApi
+import com.example.practica_1.network.getRetrofit
+import com.example.practica_1.recyclerView.FacturaAdapter
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.joda.time.format.DateTimeFormat
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
 
 
-class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
+class MainActivity : AppCompatActivity(), FacturaAdapter.OnFacturaListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -31,20 +34,42 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
     private var _facturas = mutableListOf<Factura>()
 
-    private val BASE_URL = "http://viewnextandroid.mocklab.io/"
 
     private var importeMaximo: Double = 0.0
 
+    private var wrapperFiltro: WrapperFiltro = WrapperFiltro()
+
+
+    private val filtrosLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            if (activityResult.resultCode == RESULT_OK) {
+                wrapperFiltro = Gson().fromJson(
+                    activityResult.data?.getStringExtra(Constantes.wrapperFiltro),
+                    WrapperFiltro::class.java
+                )
+                getFacturas()
+            }
+        }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(
             layoutInflater
         )
-        binding.contenido.visibility= View.GONE
         setContentView(binding.root)
         getFacturas()
         initRecyclerView()
+        prepararYBindeoActionBar()
+
+    }
+
+    private fun prepararYBindeoActionBar() {
         setSupportActionBar(binding.toolbar)
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -53,88 +78,80 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    if(item.itemId==R.id.icono_filtro){
-        val intent: Intent = Intent(this, FiltroActividad::class.java)
-        intent.putExtra("importeMaximo", importeMaximo)
-        startActivity(intent)
-        //Como hacer para que no se me creen varias actividades de mostrar facturas y al darle al boton del movil para atrás no se stackeen
-    }
+        if (wrapperFiltro.getImporteMaximo() == 0) {
+            wrapperFiltro.setImporteMaximo(importeMaximo.toInt())
+        }
+
+        if (item.itemId == R.id.icono_filtro) {
+
+            val intent = Intent(this, FiltroActividad::class.java)
+            intent.putExtra(Constantes.wrapper, Gson().toJson(wrapperFiltro))
+            filtrosLauncher.launch(intent)
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
 
-    //Iniciamos el recyclerview con su correspondiente adaptador y lista de datos a mostrar,
-    //también indicamos la disposición que queremos en nuestra vista, en este caso vertical
+    //Se incializa el recyclerview con su correspondiente adaptador y lista de datos a mostrar,
+    //también se indica la disposición de la vista, en este caso vertical
     private fun initRecyclerView() {
         adapter = FacturaAdapter(this)
         binding.recyclerFacturas.layoutManager = LinearLayoutManager(this)
         binding.recyclerFacturas.adapter = adapter
-        binding.recyclerFacturas.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        binding.recyclerFacturas.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         adapter.submitList(_facturas)
 
     }
 
-    //Instanciamos la clase Retrofit pasandole como parámetro del método add..Factory el GSONConverter
-    //este objeto nos permitira realizar las llamadas a la API y nos devolverá el objeto parseado
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder().baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create()).build()
-    }
 
     //Método GET para obtener las fácturas de nuestra API el cual se realiza en un hilo secundario, IO,
     //mediante una corutina
+    @SuppressLint("NotifyDataSetChanged")
     private fun getFacturas() {
-
+        binding.recyclerFacturas.visibility=View.VISIBLE
+        binding.facturasVacias.visibility=View.GONE
         CoroutineScope(Dispatchers.IO).launch {
+
             val call: Response<RespuestaFactura> =
                 getRetrofit().create(FacturaApi::class.java).getFacturas()
             runOnUiThread {
 
-                //Si la llamada es exitosa almacenamos las facturas recibidas de la API en una variable local
+                //Si la llamada es exitosa se almacenan las facturas recibidas de la API en una variable local
                 if (call.isSuccessful) {
                     val callBody = call.body()
 
                     //si callBody es nullo facturas = lista vacía
-                    var facturas = callBody?.facturas ?: emptyList()
+                    val facturas = callBody?.facturas ?: emptyList()
 
-                    //Borramos los dato que puedan haber en _facturas y añadimos todas las facturas obtenidas desde la API
+                    //Se limpia las posibles facturas que haya en _facturas y se añaden las nuevas facturas filtradas
                     _facturas.clear()
-                    _facturas.addAll(facturas)
 
-                    //Ahora que tenemos el conjunto total de facturas calculamos el importe máximo de estas
-                    importeMaximo = getMaxImporte(_facturas)
+                    _facturas.addAll(
+                        facturas.filter {
+                            filtrar(it)
+                        }
+                    )
 
-                    //Si existen los campos correspondientes a los filtros enviados desde la SegundaActividad (donde se escogen los diferentes filtros)
-                    // realizamos los correspondientes filtros
-                    if (intent.hasExtra("importeFiltro")) {
+                    if (_facturas.isNotEmpty()) {
+                        //Se calcula el importe máximo de estas
+                        importeMaximo =
+                            _facturas.maxByOrNull { it.importeOrdenacion }!!.importeOrdenacion
 
-                        //Variables para almacenar los datos del intent recibido
-                        val fecha1 = intent.getStringExtra("fechaDesde")
-                        val fecha2 = intent.getStringExtra("fechaHasta")
-                        val maximoFiltro = intent.getIntExtra("importeFiltro", 0)
-                        val estados: MutableList<String>  = intent.getSerializableExtra("estadosSeleccionados") as MutableList<String>
-                        println(estados)
-
-                        facturas =_facturas.filter { it.importeOrdenacion < maximoFiltro &&
-                                validarFechas(it.fecha, fecha1!!, fecha2!!) &&
-                                estados.contains(it.descEstado.toString())}
-
-                        _facturas.clear()
-
-                        _facturas.addAll(facturas)
-
+                    }else{
+                        binding.recyclerFacturas.visibility=View.GONE
+                        binding.facturasVacias.visibility=View.VISIBLE
                     }
-
-                    adapter.notifyDataSetChanged()
-
-                    mostrarLoader()
-
-
                 }
-                //Si la llamada no es exitosa mostramos un error por consola
-                else {
-                    Log.i("MyTag", "ERROR COROUTINESCOPE ")
-                }
+                adapter.notifyDataSetChanged()
+
+                mostrarLoader()
+
             }
 
         }
@@ -142,44 +159,76 @@ class MainActivity : AppCompatActivity(), FacturaAdapter.onFacturaListener {
 
 
     //Lógica que se realiza al realizar click en el icono de cada factura
-    override fun onIconoClick() {
+    override fun onFacturaClick() {
 
-        //Instanciamos el constructor del dialog y seteamos el título y el mensaje
+        //Se instancia el constructor del dialog y se setea el título y el mensaje
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Título")
-        builder.setMessage("Está función aún no está disponible")
-        builder.setNeutralButton("Cerrar") { dialog, which ->
-            {}
+        builder.setTitle(getString(R.string.titutloDialogFactura))
+        builder.setMessage(getString(R.string.cuerpoDialogFactura))
+        builder.setNeutralButton(getString(R.string.neutralButtonDialogFactura)) { _, _ ->
+            run {}
         }
 
-        //Mostramos el dialog
+        //Se muestra el dialog
         builder.show()
     }
 
-    private fun getMaxImporte(facturas: List<Factura>): Double {
-        var max: Double = 0.00
 
-        for (factura in facturas) {
-            if (factura.importeOrdenacion > max) max = factura.importeOrdenacion
+    private fun mostrarLoader() {
+        binding.contenido.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
+    }
+
+
+    private fun filtrar(factura: Factura): Boolean {
+        var flag: Boolean
+
+        flag = filtrarFechas(factura.fecha)
+
+        //Si se ha tocado el parámetro de importe en filtro y el valor de la factura es mayor o igual a este
+        if (wrapperFiltro.importeFiltro > 0 && wrapperFiltro.importeFiltro.toDouble() < factura.importeOrdenacion) {
+            flag = false
         }
-        return max
 
+        if (wrapperFiltro.getEstadosFiltro().isNotEmpty() && !(wrapperFiltro.getEstadosFiltro()
+                .contains(factura.descEstado))
+        ) {
+            flag = false
+        }
+
+
+
+        return flag
     }
 
 
-    //Parseamos la fecha de la factura para compararlas en orden AÑO -> MES -> DIA
-    private fun validarFechas(fechaFiltrado : String,fecha1: String, fecha2: String): Boolean {
+    private fun filtrarFechas(fecha: String): Boolean {
+        var flag = true
+        val fechaDesdeWrapper = wrapperFiltro.getFecha_desde()
+        val fechaHastaWrapper = wrapperFiltro.getFecha_hasta()
+        val format = DateTimeFormat.forPattern(Constantes.defaultPatternFecha)
+        val fecha2 = format.parseDateTime(fecha)
 
-        val parser =  SimpleDateFormat("dd/MM/yyyy")
-        val formatter = SimpleDateFormat("yyyy/MM/dd")
-        val fechaFiltradoFormatted = formatter.format(parser.parse(fechaFiltrado))
-        return (fechaFiltradoFormatted.compareTo(fecha1)>=0 && fechaFiltrado.compareTo(fecha2)<=0)
 
-}
+        if(fechaDesdeWrapper.isNotEmpty() && fechaHastaWrapper.isNotEmpty()){
 
-    private fun mostrarLoader(){
-        Thread.sleep(3000)
-        binding.contenido.visibility= View.VISIBLE
-        binding.progressBar.visibility= View.GONE
+            val fechaDesdeWrapper2 = format.parseDateTime(fechaDesdeWrapper)
+            val fechaHastaWrapper2 =format.parseDateTime(fechaHastaWrapper)
+            flag = fecha2.isAfter(fechaDesdeWrapper2)  && fecha2.isBefore(fechaHastaWrapper2)
+
+        }else if (fechaDesdeWrapper.isNotEmpty()){
+
+            val fechaDesdeWrapper2 = format.parseDateTime(fechaDesdeWrapper)
+            flag=fecha2.isAfter(fechaDesdeWrapper2)
+
+        }else if(fechaHastaWrapper.isNotEmpty()){
+
+            val fechaHastaWrapper2 = format.parseDateTime(fechaHastaWrapper)
+            flag=fecha2.isBefore(fechaHastaWrapper2)
+
+        }
+
+        return flag
     }
 }
+

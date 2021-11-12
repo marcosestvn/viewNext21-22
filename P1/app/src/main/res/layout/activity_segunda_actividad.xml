@@ -9,12 +9,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/normal_padding">
+        android:paddingStart="@dimen/normal_padding">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#FAF8F8"
             tools:context=".SegundaActividad">
 
@@ -55,14 +55,15 @@
                 app:layout_constraintHorizontal_bias="0.956"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                android:contentDescription="@string/botonCerrar" />
 
             <TextView
                 android:id="@+id/valorSlider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="0"
+                android:text="@string/importe_factura"
                 android:textColor="@color/verde_proyecto"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
@@ -82,7 +83,8 @@
                 android:thumbTint="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/valorSlider" />
+                app:layout_constraintTop_toBottomOf="@+id/valorSlider"
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/fechaDesde"
@@ -195,7 +197,7 @@
                 android:id="@+id/max_seekbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Max"
+                android:text="@string/max"
                 android:textColor="@color/verde_proyecto"
                 app:layout_constraintBottom_toTopOf="@+id/sliderImporte"
                 app:layout_constraintEnd_toEndOf="@+id/sliderImporte"
@@ -287,7 +289,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/round_button"
                 android:padding="10dp"
-                android:paddingLeft="@dimen/estado_text_size"
+                android:paddingStart="@dimen/estado_text_size"
                 android:text="@string/botonFiltrar"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"

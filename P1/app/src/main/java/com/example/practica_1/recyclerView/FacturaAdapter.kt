@@ -1,25 +1,18 @@
-package com.example.practica_1.RecyclerView
+package com.example.practica_1.recyclerView
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.example.practica_1.Model.Factura
 import com.example.practica_1.R
+import com.example.practica_1.model.Factura
 
 class FacturaAdapter(
-    private val facturaClickListener: onFacturaListener
+    private val facturaClickListener: OnFacturaListener
 ) : ListAdapter<Factura,FacturaViewHolder>(MyDiffUtil()) {
 
     //Interfaz de métodos a implementar en el listener
-    interface onFacturaListener {
-        fun onIconoClick()
+    interface OnFacturaListener {
+        fun onFacturaClick()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacturaViewHolder {
